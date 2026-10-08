@@ -1,0 +1,91 @@
+﻿head,relation,tail,props
+job:Python后端工程师,offered_by,company:字节跳动,{}
+job:Python后端工程师,located_in,city:北京,{}
+job:Python后端工程师,requires_edu,edu:本科,{}
+job:Python后端工程师,requires_exp,exp:3-5年,{}
+job:Python后端工程师,salary_range,25-45,"{'min': 25, 'max': 45}"
+job:Python后端工程师,requires,skill:Django,{}
+job:Python后端工程师,requires,skill:Linux,{}
+job:Python后端工程师,requires,skill:MySQL,{}
+job:Python后端工程师,requires,skill:Python,{}
+job:Python后端工程师,requires,skill:Redis,{}
+job:Java开发工程师,offered_by,company:阿里巴巴,{}
+job:Java开发工程师,located_in,city:上海,{}
+job:Java开发工程师,requires_edu,edu:本科,{}
+job:Java开发工程师,requires_exp,exp:3-5年,{}
+job:Java开发工程师,salary_range,28-50,"{'min': 28, 'max': 50}"
+job:Java开发工程师,requires,skill:Java,{}
+job:Java开发工程师,requires,skill:Kafka,{}
+job:Java开发工程师,requires,skill:MySQL,{}
+job:Java开发工程师,requires,skill:Spring,{}
+job:Java开发工程师,requires,skill:微服务,{}
+job:算法工程师,offered_by,company:百度,{}
+job:算法工程师,located_in,city:北京,{}
+job:算法工程师,requires_edu,edu:硕士,{}
+job:算法工程师,requires_exp,exp:3-5年,{}
+job:算法工程师,salary_range,35-70,"{'min': 35, 'max': 70}"
+job:算法工程师,requires,skill:PyTorch,{}
+job:算法工程师,requires,skill:Python,{}
+job:算法工程师,requires,skill:数学,{}
+job:算法工程师,requires,skill:机器学习,{}
+job:算法工程师,requires,skill:深度学习,{}
+job:数据分析师,offered_by,company:美团,{}
+job:数据分析师,located_in,city:北京,{}
+job:数据分析师,requires_edu,edu:本科,{}
+job:数据分析师,requires_exp,exp:1-3年,{}
+job:数据分析师,salary_range,18-18,"{'min': 18, 'max': 18}"
+job:数据分析师,requires,skill:Excel,{}
+job:数据分析师,requires,skill:Pandas,{}
+job:数据分析师,requires,skill:Python,{}
+job:数据分析师,requires,skill:SQL,{}
+job:数据分析师,requires,skill:统计学,{}
+job:前端开发工程师,offered_by,company:腾讯,{}
+job:前端开发工程师,located_in,city:深圳,{}
+job:前端开发工程师,requires_edu,edu:本科,{}
+job:前端开发工程师,requires_exp,exp:1-3年,{}
+job:前端开发工程师,salary_range,20-40,"{'min': 20, 'max': 40}"
+job:前端开发工程师,requires,skill:CSS,{}
+job:前端开发工程师,requires,skill:HTML,{}
+job:前端开发工程师,requires,skill:JavaScript,{}
+job:前端开发工程师,requires,skill:React,{}
+job:前端开发工程师,requires,skill:Vue,{}
+job:大数据开发工程师,offered_by,company:阿里巴巴,{}
+job:大数据开发工程师,located_in,city:杭州,{}
+job:大数据开发工程师,requires_edu,edu:本科,{}
+job:大数据开发工程师,requires_exp,exp:3-5年,{}
+job:大数据开发工程师,salary_range,25-45,"{'min': 25, 'max': 45}"
+job:大数据开发工程师,requires,skill:Hadoop,{}
+job:大数据开发工程师,requires,skill:Java,{}
+job:大数据开发工程师,requires,skill:Kafka,{}
+job:大数据开发工程师,requires,skill:SQL,{}
+job:大数据开发工程师,requires,skill:Spark,{}
+job:运维开发工程师,offered_by,company:网易,{}
+job:运维开发工程师,located_in,city:杭州,{}
+job:运维开发工程师,requires_edu,edu:本科,{}
+job:运维开发工程师,requires_exp,exp:3-5年,{}
+job:运维开发工程师,salary_range,20-20,"{'min': 20, 'max': 20}"
+job:运维开发工程师,requires,skill:Docker,{}
+job:运维开发工程师,requires,skill:Kubernetes,{}
+job:运维开发工程师,requires,skill:Linux,{}
+job:运维开发工程师,requires,skill:Python,{}
+job:运维开发工程师,requires,skill:Shell,{}
+job:测试开发工程师,offered_by,company:美团,{}
+job:测试开发工程师,located_in,city:上海,{}
+job:测试开发工程师,requires_edu,edu:本科,{}
+job:测试开发工程师,requires_exp,exp:1-3年,{}
+job:测试开发工程师,salary_range,18-32,"{'min': 18, 'max': 32}"
+job:测试开发工程师,requires,skill:Linux,{}
+job:测试开发工程师,requires,skill:Python,{}
+job:测试开发工程师,requires,skill:SQL,{}
+job:测试开发工程师,requires,skill:Selenium,{}
+job:测试开发工程师,requires,skill:自动化测试,{}
+job:数据产品经理,offered_by,company:京东,{}
+job:数据产品经理,located_in,city:北京,{}
+job:数据产品经理,requires_edu,edu:本科,{}
+job:数据产品经理,requires_exp,exp:3-5年,{}
+job:数据产品经理,salary_range,20-38,"{'min': 20, 'max': 38}"
+job:数据产品经理,requires,skill:Axure,{}
+job:数据产品经理,requires,skill:SQL,{}
+job:数据产品经理,requires,skill:产品设计,{}
+job:数据产品经理,requires,skill:数据分析,{}
+job:数据产品经理,requires,skill:沟通,{}
