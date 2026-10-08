@@ -1,0 +1,10 @@
+﻿title,skills,city,company,salary_min,salary_max,education,experience
+Python后端工程师,"['Django', 'Linux', 'MySQL', 'Python', 'Redis']",北京,字节跳动,25,45,本科,3-5年
+Java开发工程师,"['Java', 'Kafka', 'MySQL', 'Spring', '微服务']",上海,阿里巴巴,28,50,本科,3-5年
+算法工程师,"['PyTorch', 'Python', '数学', '机器学习', '深度学习']",北京,百度,35,70,硕士,3-5年
+数据分析师,"['Excel', 'Pandas', 'Python', 'SQL', '统计学']",北京,美团,18,18,本科,1-3年
+前端开发工程师,"['CSS', 'HTML', 'JavaScript', 'React', 'Vue']",深圳,腾讯,20,40,本科,1-3年
+大数据开发工程师,"['Hadoop', 'Java', 'Kafka', 'SQL', 'Spark']",杭州,阿里巴巴,25,45,本科,3-5年
+运维开发工程师,"['Docker', 'Kubernetes', 'Linux', 'Python', 'Shell']",杭州,网易,20,20,本科,3-5年
+测试开发工程师,"['Linux', 'Python', 'SQL', 'Selenium', '自动化测试']",上海,美团,18,32,本科,1-3年
+数据产品经理,"['Axure', 'SQL', '产品设计', '数据分析', '沟通']",北京,京东,20,38,本科,3-5年
