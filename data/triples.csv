@@ -1,6 +1,6 @@
 ﻿head,relation,tail,props
 job:Python后端工程师,offered_by,company:字节跳动,{}
-job:Python后端工程师,located_in,city:北京,{}
+job:Python后端工程师,located_in,city:北京市,{}
 job:Python后端工程师,requires_edu,edu:本科,{}
 job:Python后端工程师,requires_exp,exp:3-5年,{}
 job:Python后端工程师,salary_range,25-45,"{'min': 25, 'max': 45}"
@@ -10,7 +10,7 @@ job:Python后端工程师,requires,skill:MySQL,{}
 job:Python后端工程师,requires,skill:Python,{}
 job:Python后端工程师,requires,skill:Redis,{}
 job:Java开发工程师,offered_by,company:阿里巴巴,{}
-job:Java开发工程师,located_in,city:上海,{}
+job:Java开发工程师,located_in,city:杭州市,{}
 job:Java开发工程师,requires_edu,edu:本科,{}
 job:Java开发工程师,requires_exp,exp:3-5年,{}
 job:Java开发工程师,salary_range,28-50,"{'min': 28, 'max': 50}"
@@ -33,14 +33,14 @@ job:数据分析师,offered_by,company:美团,{}
 job:数据分析师,located_in,city:北京,{}
 job:数据分析师,requires_edu,edu:本科,{}
 job:数据分析师,requires_exp,exp:1-3年,{}
-job:数据分析师,salary_range,18-18,"{'min': 18, 'max': 18}"
+job:数据分析师,salary_range,18-30,"{'min': 18, 'max': 30}"
 job:数据分析师,requires,skill:Excel,{}
 job:数据分析师,requires,skill:Pandas,{}
 job:数据分析师,requires,skill:Python,{}
 job:数据分析师,requires,skill:SQL,{}
 job:数据分析师,requires,skill:统计学,{}
 job:前端开发工程师,offered_by,company:腾讯,{}
-job:前端开发工程师,located_in,city:深圳,{}
+job:前端开发工程师,located_in,city:深圳市,{}
 job:前端开发工程师,requires_edu,edu:本科,{}
 job:前端开发工程师,requires_exp,exp:1-3年,{}
 job:前端开发工程师,salary_range,20-40,"{'min': 20, 'max': 40}"
@@ -63,9 +63,9 @@ job:运维开发工程师,offered_by,company:网易,{}
 job:运维开发工程师,located_in,city:杭州,{}
 job:运维开发工程师,requires_edu,edu:本科,{}
 job:运维开发工程师,requires_exp,exp:3-5年,{}
-job:运维开发工程师,salary_range,20-20,"{'min': 20, 'max': 20}"
+job:运维开发工程师,salary_range,20-38,"{'min': 20, 'max': 38}"
 job:运维开发工程师,requires,skill:Docker,{}
-job:运维开发工程师,requires,skill:Kubernetes,{}
+job:运维开发工程师,requires,skill:K8s,{}
 job:运维开发工程师,requires,skill:Linux,{}
 job:运维开发工程师,requires,skill:Python,{}
 job:运维开发工程师,requires,skill:Shell,{}
@@ -89,3 +89,63 @@ job:数据产品经理,requires,skill:SQL,{}
 job:数据产品经理,requires,skill:产品设计,{}
 job:数据产品经理,requires,skill:数据分析,{}
 job:数据产品经理,requires,skill:沟通,{}
+job:机器学习平台工程师,offered_by,company:字节跳动,{}
+job:机器学习平台工程师,located_in,city:上海,{}
+job:机器学习平台工程师,requires_edu,edu:硕士,{}
+job:机器学习平台工程师,requires_exp,exp:3-5年,{}
+job:机器学习平台工程师,salary_range,30-60,"{'min': 30, 'max': 60}"
+job:机器学习平台工程师,requires,skill:C++,{}
+job:机器学习平台工程师,requires,skill:Kubernetes,{}
+job:机器学习平台工程师,requires,skill:Linux,{}
+job:机器学习平台工程师,requires,skill:Python,{}
+job:机器学习平台工程师,requires,skill:TensorFlow,{}
+job:嵌入式软件工程师,offered_by,company:华为,{}
+job:嵌入式软件工程师,located_in,city:深圳市,{}
+job:嵌入式软件工程师,requires_edu,edu:本科,{}
+job:嵌入式软件工程师,requires_exp,exp:3-5年,{}
+job:嵌入式软件工程师,salary_range,22-45,"{'min': 22, 'max': 45}"
+job:嵌入式软件工程师,requires,skill:C,{}
+job:嵌入式软件工程师,requires,skill:C++,{}
+job:嵌入式软件工程师,requires,skill:FreeRTOS,{}
+job:嵌入式软件工程师,requires,skill:Linux,{}
+job:嵌入式软件工程师,requires,skill:驱动开发,{}
+job:iOS开发工程师,offered_by,company:快手,{}
+job:iOS开发工程师,located_in,city:北京,{}
+job:iOS开发工程师,requires_edu,edu:本科,{}
+job:iOS开发工程师,requires_exp,exp:3-5年,{}
+job:iOS开发工程师,salary_range,25-45,"{'min': 25, 'max': 45}"
+job:iOS开发工程师,requires,skill:Objective-C,{}
+job:iOS开发工程师,requires,skill:Swift,{}
+job:iOS开发工程师,requires,skill:UIKit,{}
+job:iOS开发工程师,requires,skill:Xcode,{}
+job:iOS开发工程师,requires,skill:iOS,{}
+job:推荐算法工程师,offered_by,company:小红书,{}
+job:推荐算法工程师,located_in,city:上海,{}
+job:推荐算法工程师,requires_edu,edu:硕士,{}
+job:推荐算法工程师,requires_exp,exp:3-5年,{}
+job:推荐算法工程师,salary_range,35-65,"{'min': 35, 'max': 65}"
+job:推荐算法工程师,requires,skill:Python,{}
+job:推荐算法工程师,requires,skill:SQL,{}
+job:推荐算法工程师,requires,skill:Spark,{}
+job:推荐算法工程师,requires,skill:推荐系统,{}
+job:推荐算法工程师,requires,skill:机器学习,{}
+job:数据仓库工程师,offered_by,company:京东,{}
+job:数据仓库工程师,located_in,city:北京,{}
+job:数据仓库工程师,requires_edu,edu:本科,{}
+job:数据仓库工程师,requires_exp,exp:3-5年,{}
+job:数据仓库工程师,salary_range,0-0,"{'min': 0, 'max': 0}"
+job:数据仓库工程师,requires,skill:ETL,{}
+job:数据仓库工程师,requires,skill:Hive,{}
+job:数据仓库工程师,requires,skill:SQL,{}
+job:数据仓库工程师,requires,skill:Spark,{}
+job:数据仓库工程师,requires,skill:数据建模,{}
+job:全栈开发工程师,offered_by,company:小米,{}
+job:全栈开发工程师,located_in,city:武汉市,{}
+job:全栈开发工程师,requires_edu,edu:本科,{}
+job:全栈开发工程师,requires_exp,exp:1-3年,{}
+job:全栈开发工程师,salary_range,18-35,"{'min': 18, 'max': 35}"
+job:全栈开发工程师,requires,skill:Docker,{}
+job:全栈开发工程师,requires,skill:JavaScript,{}
+job:全栈开发工程师,requires,skill:MySQL,{}
+job:全栈开发工程师,requires,skill:Python,{}
+job:全栈开发工程师,requires,skill:Vue,{}

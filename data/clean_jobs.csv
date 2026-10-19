@@ -1,10 +1,16 @@
-﻿title,skills,city,company,salary_min,salary_max,education,experience
-Python后端工程师,"['Django', 'Linux', 'MySQL', 'Python', 'Redis']",北京,字节跳动,25,45,本科,3-5年
-Java开发工程师,"['Java', 'Kafka', 'MySQL', 'Spring', '微服务']",上海,阿里巴巴,28,50,本科,3-5年
-算法工程师,"['PyTorch', 'Python', '数学', '机器学习', '深度学习']",北京,百度,35,70,硕士,3-5年
-数据分析师,"['Excel', 'Pandas', 'Python', 'SQL', '统计学']",北京,美团,18,18,本科,1-3年
-前端开发工程师,"['CSS', 'HTML', 'JavaScript', 'React', 'Vue']",深圳,腾讯,20,40,本科,1-3年
-大数据开发工程师,"['Hadoop', 'Java', 'Kafka', 'SQL', 'Spark']",杭州,阿里巴巴,25,45,本科,3-5年
-运维开发工程师,"['Docker', 'Kubernetes', 'Linux', 'Python', 'Shell']",杭州,网易,20,20,本科,3-5年
-测试开发工程师,"['Linux', 'Python', 'SQL', 'Selenium', '自动化测试']",上海,美团,18,32,本科,1-3年
-数据产品经理,"['Axure', 'SQL', '产品设计', '数据分析', '沟通']",北京,京东,20,38,本科,3-5年
+﻿title,company,city,salary_min,salary_max,education,experience,skills
+Python后端工程师,字节跳动,北京市,25,45,本科,3-5年,"['Django', 'Linux', 'MySQL', 'Python', 'Redis']"
+Java开发工程师,阿里巴巴,杭州市,28,50,本科,3-5年,"['Java', 'Kafka', 'MySQL', 'Spring', '微服务']"
+算法工程师,百度,北京,35,70,硕士,3-5年,"['PyTorch', 'Python', '数学', '机器学习', '深度学习']"
+数据分析师,美团,北京,18,30,本科,1-3年,"['Excel', 'Pandas', 'Python', 'SQL', '统计学']"
+前端开发工程师,腾讯,深圳市,20,40,本科,1-3年,"['CSS', 'HTML', 'JavaScript', 'React', 'Vue']"
+大数据开发工程师,阿里巴巴,杭州,25,45,本科,3-5年,"['Hadoop', 'Java', 'Kafka', 'SQL', 'Spark']"
+运维开发工程师,网易,杭州,20,38,本科,3-5年,"['Docker', 'K8s', 'Linux', 'Python', 'Shell']"
+测试开发工程师,美团,上海,18,32,本科,1-3年,"['Linux', 'Python', 'SQL', 'Selenium', '自动化测试']"
+数据产品经理,京东,北京,20,38,本科,3-5年,"['Axure', 'SQL', '产品设计', '数据分析', '沟通']"
+机器学习平台工程师,字节跳动,上海,30,60,硕士,3-5年,"['C++', 'Kubernetes', 'Linux', 'Python', 'TensorFlow']"
+嵌入式软件工程师,华为,深圳市,22,45,本科,3-5年,"['C', 'C++', 'FreeRTOS', 'Linux', '驱动开发']"
+iOS开发工程师,快手,北京,25,45,本科,3-5年,"['Objective-C', 'Swift', 'UIKit', 'Xcode', 'iOS']"
+推荐算法工程师,小红书,上海,35,65,硕士,3-5年,"['Python', 'SQL', 'Spark', '推荐系统', '机器学习']"
+数据仓库工程师,京东,北京,0,0,本科,3-5年,"['ETL', 'Hive', 'SQL', 'Spark', '数据建模']"
+全栈开发工程师,小米,武汉市,18,35,本科,1-3年,"['Docker', 'JavaScript', 'MySQL', 'Python', 'Vue']"
