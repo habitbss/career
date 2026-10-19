@@ -13,70 +13,66 @@ import networkx as nx
 DATA_DIR = Path(__file__).parent / "data"
 DATA_DIR.mkdir(exist_ok=True)
 
+import re
+
+
+def parse_salary(text):
+    """把 "25-45K" / "1.5-2.5万" / "8000-12000元/月" / "面议" 统一成 (min, max)，单位 K/月。"""
+    s = str(text or "").strip()
+    if not s or any(k in s for k in ["面议", "不限", "暂无", "保密"]):
+        return None, None
+    s = re.split(r"[·×*]", s)[0]
+    is_wan = "万" in s
+    s = (s.replace("元/月", "").replace("元", "").replace("/月", "")
+          .replace("月薪", "").replace("K", "").replace("k", "")
+          .replace("千", "").replace("万", ""))
+    nums = [float(x) for x in re.findall(r"\d+(?:\.\d+)?", s)]
+    if not nums:
+        return None, None
+    if is_wan:
+        nums = [n * 10 for n in nums]
+    elif max(nums) >= 1000:
+        nums = [n / 1000 for n in nums]
+    lo, hi = min(nums[0], nums[-1]), max(nums[0], nums[-1])
+    return round(lo), round(hi)
 
 # ---------- 1. 数据获取（模拟爬虫） ----------
 def crawl_jobs():
-    jobs = [
-        {"title": "Python后端工程师",
-         "skills": ["Python", "Django", "MySQL", "Redis", "Linux"],
-         "city": "北京", "company": "字节跳动",
-         "salary_min": 25, "salary_max": 45,
-         "education": "本科", "experience": "3-5年"},
-        {"title": "Java开发工程师",
-         "skills": ["Java", "Spring", "MySQL", "Kafka", "微服务"],
-         "city": "上海", "company": "阿里巴巴",
-         "salary_min": 28, "salary_max": 50,
-         "education": "本科", "experience": "3-5年"},
-        {"title": "算法工程师",
-         "skills": ["Python", "机器学习", "深度学习", "PyTorch", "数学"],
-         "city": "北京", "company": "百度",
-         "salary_min": 35, "salary_max": 70,
-         "education": "硕士", "experience": "3-5年"},
-        {"title": "数据分析师",
-         "skills": ["Python", "SQL", "Pandas", "统计学", "Excel"],
-         "city": "北京", "company": "美团",
-         "salary_min": 18, "salary_max": 30,
-         "education": "本科", "experience": "1-3年"},
-        {"title": "前端开发工程师",
-         "skills": ["JavaScript", "Vue", "React", "HTML", "CSS"],
-         "city": "深圳", "company": "腾讯",
-         "salary_min": 20, "salary_max": 40,
-         "education": "本科", "experience": "1-3年"},
-        {"title": "大数据开发工程师",
-         "skills": ["Java", "Spark", "Hadoop", "SQL", "Kafka"],
-         "city": "杭州", "company": "阿里巴巴",
-         "salary_min": 25, "salary_max": 45,
-         "education": "本科", "experience": "3-5年"},
-        {"title": "运维开发工程师",
-         "skills": ["Linux", "Python", "Docker", "Kubernetes", "Shell"],
-         "city": "杭州", "company": "网易",
-         "salary_min": 20, "salary_max": 38,
-         "education": "本科", "experience": "3-5年"},
-        {"title": "测试开发工程师",
-         "skills": ["Python", "Selenium", "SQL", "Linux", "自动化测试"],
-         "city": "上海", "company": "美团",
-         "salary_min": 18, "salary_max": 32,
-         "education": "本科", "experience": "1-3年"},
-        {"title": "数据产品经理",
-         "skills": ["SQL", "数据分析", "产品设计", "沟通", "Axure"],
-         "city": "北京", "company": "京东",
-         "salary_min": 20, "salary_max": 38,
-         "education": "本科", "experience": "3-5年"},
-    ]
-    noisy = []
-    for j in jobs:
-        j2 = dict(j)
-        j2["title"] = " " + j2["title"] + " "
-        if random.random() < 0.2:
-            j2["salary_max"] = None
-        noisy.append(j2)
-    noisy.append(noisy[0])
+    """从 data/jobs.csv 读取岗位数据（不再硬编码）。"""
+    path = DATA_DIR / "jobs.csv"
+    if not path.exists():
+        raise FileNotFoundError(
+            f"找不到 {path}\n"
+            "请把岗位数据放到 data/jobs.csv，表头：\n"
+            "  title,company,city,salary,education,experience,skills")
+
+    df = pd.read_csv(path, encoding="utf-8-sig", dtype=str).fillna("")
+    df.columns = [c.strip().lower() for c in df.columns]
+
+    missing = [c for c in ["title", "company", "city"] if c not in df.columns]
+    if missing:
+        raise ValueError(f"data/jobs.csv 缺少列 {missing}，实际列名：{list(df.columns)}")
+
+    jobs = []
+    for _, r in df.iterrows():
+        smin, smax = parse_salary(r.get("salary", ""))
+        jobs.append({
+            "title": r.get("title", ""),
+            "company": r.get("company", ""),
+            "city": r.get("city", ""),
+            "salary_min": smin,
+            "salary_max": smax,
+            "education": r.get("education", ""),
+            "experience": r.get("experience", ""),
+            "skills": [s.strip() for s in
+                       str(r.get("skills", "")).replace("；", ";").split(";")
+                       if s.strip()],
+        })
 
     (DATA_DIR / "raw_jobs.json").write_text(
-        json.dumps(noisy, ensure_ascii=False, indent=2), encoding="utf-8")
-    print(f"[1] 数据获取：{len(noisy)} 条原始数据")
-    return noisy
-
+        json.dumps(jobs, ensure_ascii=False, indent=2), encoding="utf-8")
+    print(f"[1] 数据获取：{len(jobs)} 条原始数据（来自 jobs.csv）")
+    return jobs
 
 # ---------- 2. 数据处理 ----------
 def clean_jobs(raw_jobs):

@@ -1,0 +1,16 @@
+title,company,city,salary,education,experience,skills,description,url
+Python后端工程师,字节跳动,北京市,25-45K,本科,3-5年,Python;Django;MySQL;Redis;Linux,负责后端服务开发；要求熟悉Python与常见Web框架；有高并发经验优先,https://example.com/job/1
+Java开发工程师,阿里巴巴,杭州市,28-50K·14薪,本科,3-5年,Java;Spring;MySQL;Kafka;微服务,负责交易系统研发；熟悉Spring生态；了解分布式事务,https://example.com/job/2
+算法工程师,百度,北京,35-70K,硕士,3-5年,Python;机器学习;深度学习;PyTorch;数学,负责推荐与排序模型研发；要求扎实的机器学习基础,https://example.com/job/3
+数据分析师,美团,北京,18-30K,本科,1-3年,Python;SQL;Pandas;统计学;Excel,负责业务数据分析与报表；要求熟练使用SQL与Python,https://example.com/job/4
+前端开发工程师,腾讯,深圳市,20-40K,本科,1-3年,JavaScript;Vue;React;HTML;CSS,负责Web前端开发；熟悉主流前端框架,https://example.com/job/5
+大数据开发工程师,阿里巴巴,杭州,25-45K,本科,3-5年,Java;Spark;Hadoop;SQL;Kafka,负责离线与实时数仓开发；熟悉Spark与Hadoop生态,https://example.com/job/6
+运维开发工程师,网易,杭州,20-38K,本科,3-5年,Linux;Python;Docker;K8s;Shell,负责容器化平台运维；熟悉Kubernetes与自动化运维,https://example.com/job/7
+测试开发工程师,美团,上海,18-32K,本科,1-3年,Python;Selenium;SQL;Linux;自动化测试,负责自动化测试框架建设；要求熟悉接口测试,https://example.com/job/8
+数据产品经理,京东,北京,20-38K,本科,3-5年,SQL;数据分析;产品设计;沟通;Axure,负责数据产品规划；要求具备数据分析能力与沟通能力,https://example.com/job/9
+机器学习平台工程师,字节跳动,上海,30-60K,硕士,3-5年,Python;C++;Kubernetes;TensorFlow;Linux,负责训练平台建设；熟悉分布式训练与容器调度,https://example.com/job/10
+嵌入式软件工程师,华为,深圳市,22-45K,本科,3-5年,C;C++;Linux;FreeRTOS;驱动开发,负责嵌入式系统开发；熟悉Linux驱动与实时操作系统,https://example.com/job/11
+iOS开发工程师,快手,北京,25-45K,本科,3-5年,Swift;Objective-C;iOS;Xcode;UIKit,负责iOS客户端开发；熟悉Swift与UIKit,https://example.com/job/12
+推荐算法工程师,小红书,上海,35-65K,硕士,3-5年,Python;机器学习;推荐系统;Spark;SQL,负责推荐系统召回与排序；要求有推荐算法实践经验,https://example.com/job/13
+数据仓库工程师,京东,北京,面议,本科,3-5年,SQL;Hive;Spark;数据建模;ETL,负责数仓建模与ETL开发；熟悉Hive与数据建模方法,https://example.com/job/14
+全栈开发工程师,小米,武汉市,18-35K,本科,1-3年,Python;JavaScript;Vue;MySQL;Docker,负责内部系统全栈开发；前后端均需熟悉,https://example.com/job/15
