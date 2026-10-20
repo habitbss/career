@@ -1,22 +1,18 @@
 # convert_dataset.py
 """
-把你下载的数据集，转换成 data/jobs.csv（我们项目要的 7 列）。
+把你下载的数据集，转换成 data/jobs.csv（我们项目要的 9 列）。
 
 用法：
-    python convert_dataset.py 原始数据.csv
-
-支持你那个数据集的列名：
-    jobname / company / salary / city / description / other / label
-    minsalary / maxsalary / meansalary / city_idx
+    python convert_dataset.py data/raw.xlsx
 
 做的事：
-    1. 列名映射
-    2. 薪资：minsalary/maxsalary（单位是元）-> 千元，写成 "25-50K"
-    3. 技能：没有 skills 列，所以从 description 里按词典抽取
+    1. 列名映射（jobname->title 等）
+    2. 薪资：minsalary/maxsalary（元）-> 千元，写成 "25-50K"
+    3. 技能：从 description 里按词典抽取（本文件自带 140+ 个技能词）
     4. 学历/经验：从 description 里用正则抽
     5. 去重
 
-输出的列：title,company,city,salary,education,experience,skills,description,url
+想加技能：往下面的 SKILLS 字典里加一行，格式 "标准名": ["写法1", "写法2"]
 """
 
 import argparse
@@ -27,102 +23,181 @@ import pandas as pd
 
 DATA_DIR = Path(__file__).parent / "data"
 
+# 一个岗位至少要抽到几个技能才保留。
+# 只抽到 1 个技能的岗位（多是生物、金融等非技术岗），留在推荐系统里就是噪音。
+MIN_SKILLS = 2
+
 # ============================================================
-# 技能词典：标准名 -> [各种写法]
-# 想加技能就直接往这里加，加完重跑脚本
+# 技能词典：标准名 -> [各种写法]（小写）
 # ============================================================
 SKILLS: dict[str, list[str]] = {
-    # --- 数据工具 ---
+    # ---------- 编程语言 ----------
+    "Python": ["python"],
+    "Java": ["java"],
+    "Golang": ["golang", "go语言"],
+    "C++": ["c++"],
+    "C#": ["c#"],
+    "PHP": ["php"],
+    "Scala": ["scala"],
+    "Kotlin": ["kotlin"],
+    "Swift": ["swift"],
+    "JavaScript": ["javascript", "js"],
+    "TypeScript": ["typescript", "ts"],
+    "R语言": ["r语言"],
+    "MATLAB": ["matlab"],
+    "Shell": ["shell", "bash"],
     "SQL": ["sql"],
+
+    # ---------- 前端 ----------
+    "HTML": ["html"],
+    "CSS": ["css"],
+    "Vue": ["vue"],
+    "React": ["react"],
+    "Angular": ["angular"],
+    "Node.js": ["node.js", "nodejs"],
+    "小程序": ["小程序"],
+    "Flutter": ["flutter"],
+    "React Native": ["react native"],
+
+    # ---------- 后端 / 架构 ----------
+    "Spring": ["spring"],
+    "SpringBoot": ["springboot", "spring boot"],
+    "SpringCloud": ["springcloud", "spring cloud"],
+    "MyBatis": ["mybatis"],
+    "Django": ["django"],
+    "Flask": ["flask"],
+    "FastAPI": ["fastapi"],
+    "Netty": ["netty"],
+    "微服务": ["微服务"],
+    "分布式": ["分布式"],
+    "高并发": ["高并发"],
+    "消息队列": ["消息队列"],
+    "RocketMQ": ["rocketmq"],
+    "RabbitMQ": ["rabbitmq"],
+    "Nginx": ["nginx"],
+
+    # ---------- 数据库 ----------
     "MySQL": ["mysql"],
     "Oracle": ["oracle"],
-    "PostgreSQL": ["postgresql", "postgres", "pg数据库"],
-    "Excel": ["excel"],
-    "PPT": ["ppt", "powerpoint"],
-    "Tableau": ["tableau"],
-    "PowerBI": ["powerbi", "power bi"],
-    "FineBI": ["finebi"],
-    "帆软": ["帆软"],
-    "SPSS": ["spss"],
-    "SAS": ["sas"],
-    "R语言": ["r语言"],
-    # --- 大数据 ---
-    "Hive": ["hive"],
-    "Spark": ["spark"],
-    "Hadoop": ["hadoop"],
-    "Flink": ["flink"],
-    "Kafka": ["kafka"],
+    "PostgreSQL": ["postgresql", "postgres"],
+    "SQLServer": ["sqlserver", "sql server"],
+    "MongoDB": ["mongodb"],
+    "Redis": ["redis"],
     "HBase": ["hbase"],
     "ClickHouse": ["clickhouse"],
     "Doris": ["doris"],
-    "StarRocks": ["starrocks"],
-    "Presto": ["presto"],
-    "Elasticsearch": ["elasticsearch", "es集群"],
-    "Redis": ["redis"],
-    "MongoDB": ["mongodb"],
-    # --- 数据工程 ---
-    "ETL": ["etl"],
+    "Elasticsearch": ["elasticsearch"],
+    "TiDB": ["tidb"],
+
+    # ---------- 大数据 ----------
+    "Hadoop": ["hadoop"],
+    "Spark": ["spark"],
+    "Flink": ["flink"],
+    "Hive": ["hive"],
+    "Kafka": ["kafka"],
     "数据仓库": ["数据仓库", "数仓"],
-    "数据建模": ["数据建模", "维度建模", "数仓建模"],
+    "ETL": ["etl"],
     "数据湖": ["数据湖"],
-    "OLAP": ["olap"],
-    "数据治理": ["数据治理"],
-    "数据质量": ["数据质量"],
-    # --- 分析方法 ---
-    "A/B测试": ["a/b测试", "ab测试", "a/b test", "abtest"],
-    "漏斗分析": ["漏斗分析", "漏斗模型"],
-    "用户画像": ["用户画像"],
-    "归因分析": ["归因分析"],
-    "竞品分析": ["竞品分析"],
-    "数据挖掘": ["数据挖掘"],
-    "统计分析": ["统计分析"],
-    "回归分析": ["回归分析"],
-    "聚类": ["聚类"],
-    "时间序列": ["时间序列"],
-    "指标体系": ["指标体系"],
-    "埋点": ["埋点"],
-    "数据可视化": ["数据可视化", "可视化"],
-    "数据看板": ["看板", "dashboard"],
-    "报表": ["报表"],
-    "商业分析": ["商业分析"],
-    "业务分析": ["业务分析"],
-    # --- 编程 ---
-    "Python": ["python"],
-    "Pandas": ["pandas"],
-    "NumPy": ["numpy"],
-    "Java": ["java"],
-    "Scala": ["scala"],
-    "Golang": ["golang", "go语言"],
-    "C++": ["c++"],
-    "Shell": ["shell"],
-    "Linux": ["linux"],
-    "Git": ["git"],
-    "Docker": ["docker"],
-    "Kubernetes": ["kubernetes", "k8s"],
-    # --- 机器学习 ---
+    "实时计算": ["实时计算"],
+    "离线计算": ["离线计算", "离线数仓"],
+
+    # ---------- AI / 算法 ----------
     "机器学习": ["机器学习"],
     "深度学习": ["深度学习"],
     "NLP": ["nlp", "自然语言处理"],
     "计算机视觉": ["计算机视觉", "cv算法"],
     "推荐系统": ["推荐系统", "推荐算法"],
+    "搜索算法": ["搜索算法", "搜索推荐"],
+    "排序算法": ["排序算法", "排序模型", "ctr预估"],
     "特征工程": ["特征工程"],
     "XGBoost": ["xgboost"],
     "LightGBM": ["lightgbm"],
     "随机森林": ["随机森林"],
     "SVM": ["svm", "支持向量机"],
+    "聚类": ["聚类"],
+    "回归分析": ["回归分析"],
+    "时间序列": ["时间序列"],
+    "强化学习": ["强化学习"],
+    "知识图谱": ["知识图谱"],
+    "大模型": ["大模型", "llm"],
+    "Transformer": ["transformer"],
+    "RAG": ["rag"],
+    "模型微调": ["微调", "fine-tuning", "finetune"],
+    "Prompt": ["prompt工程", "提示词"],
+    "AIGC": ["aigc"],
+    "多模态": ["多模态"],
+    "OCR": ["ocr"],
+    "语音识别": ["语音识别"],
     "神经网络": ["神经网络"],
+    "模型部署": ["模型部署", "模型压缩"],
+
+    # ---------- 框架 / 工具 ----------
     "TensorFlow": ["tensorflow"],
     "PyTorch": ["pytorch"],
     "Keras": ["keras"],
     "Scikit-learn": ["scikit-learn", "sklearn"],
-    "大模型": ["大模型", "llm"],
-    "Transformer": ["transformer"],
-    "RAG": ["rag"],
-    # # --- 软技能/业务 ---
-    # "需求分析": ["需求分析"],
-    # "项目管理": ["项目管理"],
-    # "团队协作": ["团队协作"],
-    # "沟通": ["沟通"],
+    "Pandas": ["pandas"],
+    "NumPy": ["numpy"],
+    "Matplotlib": ["matplotlib"],
+    "Docker": ["docker"],
+    "Kubernetes": ["kubernetes", "k8s"],
+    "Jenkins": ["jenkins"],
+    "Git": ["git"],
+    "Linux": ["linux"],
+
+    # ---------- 云 ----------
+    "AWS": ["aws"],
+    "阿里云": ["阿里云"],
+    "腾讯云": ["腾讯云"],
+    "华为云": ["华为云"],
+
+    # ---------- 测试 ----------
+    "自动化测试": ["自动化测试"],
+    "接口测试": ["接口测试"],
+    "性能测试": ["性能测试"],
+    "Selenium": ["selenium"],
+    "Appium": ["appium"],
+    "JMeter": ["jmeter"],
+    "Postman": ["postman"],
+    "单元测试": ["单元测试"],
+
+    # ---------- 运维 ----------
+    "运维": ["运维"],
+    "Prometheus": ["prometheus"],
+    "Grafana": ["grafana"],
+    "Ansible": ["ansible"],
+    "CICD": ["ci/cd", "cicd", "持续集成"],
+
+    # ---------- 数据 / BI ----------
+    "数据可视化": ["数据可视化"],
+    "报表": ["报表"],
+    "Tableau": ["tableau"],
+    "PowerBI": ["powerbi", "power bi"],
+    "FineBI": ["finebi"],
+    "指标体系": ["指标体系"],
+    "埋点": ["埋点"],
+    "A/B测试": ["a/b测试", "ab测试", "a/b test", "abtest"],
+    "用户画像": ["用户画像"],
+    "数据挖掘": ["数据挖掘"],
+    "统计分析": ["统计分析"],
+    "漏斗分析": ["漏斗分析"],
+    "归因分析": ["归因分析"],
+    "数据治理": ["数据治理"],
+    "数据质量": ["数据质量"],
+    "OLAP": ["olap"],
+    "Excel": ["excel"],
+    "PPT": ["ppt", "powerpoint"],
+    "SPSS": ["spss"],
+    "SAS": ["sas"],
+    "数据建模": ["数据建模", "维度建模"],
+
+    # ---------- 金融 / 区块链 ----------
+    "风控": ["风控"],
+    "量化": ["量化"],
+    "反欺诈": ["反欺诈"],
+    "信贷": ["信贷"],
+    "区块链": ["区块链"],
+    "智能合约": ["智能合约"],
 }
 
 # 中文词直接查子串；英文词要求词边界，避免 sql 命中 mysql
@@ -147,7 +222,6 @@ def _build_patterns():
 EN_PATTERNS, ZH_TERMS = _build_patterns()
 
 EDU_PAT = re.compile(r"(本科|硕士|博士|大专|专科|研究生)")
-# 覆盖：3-5年 / 3~5年 / 5年以上 / 5年及以上 / 5年以内
 EXP_PAT = re.compile(
     r"(\d+)\s*[-~到至]\s*(\d+)\s*年"
     r"|(\d+)\s*年\s*(?:及)?以?上"
@@ -197,7 +271,7 @@ def to_k(value):
 
 
 def read_table(path: Path):
-    """自动识别 .csv / .xlsx，返回 (DataFrame, 说明)。"""
+    """自动识别 .csv / .xlsx，返回 DataFrame。"""
     suffix = path.suffix.lower()
 
     if suffix in (".xlsx", ".xlsm", ".xls"):
@@ -207,43 +281,41 @@ def read_table(path: Path):
             raise SystemExit(
                 "\n需要先装一个读取 Excel 的库，运行这条命令：\n"
                 "    pip install openpyxl\n"
-                "装完再跑一次。\n"
-                "（不想装的话：用 Excel 打开 → 另存为 → CSV UTF-8，然后传 csv 文件）\n")
+                "装完再跑一次。\n")
         if suffix == ".xls":
             try:
                 import xlrd  # noqa: F401
             except ImportError:
-                raise SystemExit(
-                    "\n.xls 老格式需要 xlrd：pip install xlrd\n"
-                    "更方便的做法：用 Excel 另存为 .xlsx 或 CSV UTF-8。\n")
+                raise SystemExit("\n.xls 老格式需要 xlrd：pip install xlrd\n"
+                                 "更方便：用 Excel 另存为 .xlsx。\n")
         book = pd.ExcelFile(path)
         sheet = book.sheet_names[0]
-        print(f"[读取] {path.name}  工作表 {book.sheet_names}  默认用第一个：{sheet}")
+        print(f"[读取] {path.name}  工作表 {book.sheet_names}  用第一个：{sheet}")
         return book.parse(sheet, dtype=str).fillna("")
 
     for enc in ("utf-8-sig", "utf-8", "gbk"):
         try:
             df = pd.read_csv(path, encoding=enc, dtype=str).fillna("")
-            print(f"[读取] {path.name}  编码={enc}  行数={len(df)}")
+            print(f"[读取] {path.name}  编码={enc}")
             return df
         except UnicodeDecodeError:
             continue
-
-    raise SystemExit("文件编码认不出来。用 Excel 打开后「另存为 → CSV UTF-8」再试。")
+    raise SystemExit("文件编码认不出来。用 Excel 另存为 CSV UTF-8 再试。")
 
 
 def main(raw_path: str, out_path: str):
     raw = Path(raw_path)
     if not raw.exists():
-        raise FileNotFoundError(f"找不到文件：{raw}")
+        raise FileNotFoundError(
+            f"找不到文件：{raw}\n"
+            f"当前所在目录：{Path.cwd()}\n"
+            "如果文件在 data 文件夹里，命令要写成：python convert_dataset.py data/文件名.xlsx")
 
     df = read_table(raw)
-    print(f"[读取] 行数={len(df)}")
-
     df.columns = [c.strip().lower() for c in df.columns]
+    print(f"[读取] 行数={len(df)}")
     print(f"[列名] {list(df.columns)}")
 
-    # 列名兼容：不同数据集叫法不一样
     def col(*names):
         for n in names:
             if n in df.columns:
@@ -262,7 +334,7 @@ def main(raw_path: str, out_path: str):
 
     for name, c in [("岗位名", c_title), ("公司", c_company), ("城市", c_city)]:
         if not c:
-            raise ValueError(f"原始数据里找不到「{name}」列，实际列名：{list(df.columns)}")
+            raise SystemExit(f"原始数据里找不到「{name}」列，实际列名：{list(df.columns)}")
 
     rows = []
     for _, r in df.iterrows():
@@ -273,13 +345,11 @@ def main(raw_path: str, out_path: str):
         if not title or not company or not city:
             continue
 
-        # 薪资：优先用 minsalary/maxsalary（元 -> 千元）
         lo = to_k(r.get(c_min)) if c_min else None
         hi = to_k(r.get(c_max)) if c_max else None
         if lo is None and c_salary:
-            # 兜底：从 "(25000.0, 50000.0)" 这种字符串里抠数字
-            nums = re.findall(r"\d+(?:\.\d+)?", str(r.get(c_salary, "")))
-            nums = [float(x) for x in nums if float(x) > 100]
+            nums = [float(x) for x in re.findall(r"\d+(?:\.\d+)?", str(r.get(c_salary, "")))
+                    if float(x) > 100]
             if nums:
                 lo, hi = int(round(min(nums) / 1000)), int(round(max(nums) / 1000))
 
@@ -298,34 +368,36 @@ def main(raw_path: str, out_path: str):
             "education": extract_education(desc) or (str(r.get(c_edu, "")).strip() if c_edu else ""),
             "experience": extract_experience(desc) or (str(r.get(c_exp, "")).strip() if c_exp else ""),
             "skills": ";".join(skills),
-            "description": desc[:2000],          # 截断，避免文件过大
+            "description": desc[:2000],
             "url": "",
         })
 
     out = pd.DataFrame(rows).drop_duplicates(subset=["title", "company", "city"])
     before = len(out)
-    out = out[out["skills"].str.len() > 0]
+    n_skills = out["skills"].apply(lambda s: len([x for x in s.split(";") if x]))
+    out = out[n_skills >= MIN_SKILLS]
 
     DATA_DIR.mkdir(exist_ok=True)
     out_path = Path(out_path)
     out.to_csv(out_path, index=False, encoding="utf-8-sig")
 
+    skill_counts = out["skills"].str.count(";").add(1)
     print(f"\n[输出] {out_path}")
-    print(f"  有效岗位：{len(out)} 条（已去重、已丢弃无技能的岗位）")
-    print(f"  因抽不出技能被丢弃：{before - len(out)} 条  "
-          f"（占比 {(before - len(out)) / max(before, 1):.1%}，太高说明技能词典不够）")
-    print(f"  平均每条技能数：{out['skills'].str.count(';').add(1).mean():.1f}")
+    print(f"  有效岗位：{len(out)} 条")
+    print(f"  因抽不出技能被丢弃：{before - len(out)} 条 "
+          f"（占比 {(before - len(out)) / max(before, 1):.1%}）")
+    print(f"  平均每条技能数：{skill_counts.mean():.1f}  （越多区分度越好）")
+    print(f"  只有 1 个技能的岗位：{(skill_counts == 1).sum()} 条 "
+          f"（占 {(skill_counts == 1).mean():.1%}，太多说明词典还不够）")
+    print(f"  城市 Top5：{out['city'].value_counts().head(5).to_dict()}")
 
-    city_top = out["city"].value_counts().head(5).to_dict()
-    print(f"  城市 Top5：{city_top}")
-
-    skill_counter: dict[str, int] = {}
+    counter: dict[str, int] = {}
     for s in out["skills"]:
         for x in s.split(";"):
             if x:
-                skill_counter[x] = skill_counter.get(x, 0) + 1
-    print(f"  技能 Top10：{dict(sorted(skill_counter.items(), key=lambda kv: -kv[1])[:10])}")
-    print(f"\n[下一步] 检查 data/jobs.csv 没问题后，运行：python kg_builder.py")
+                counter[x] = counter.get(x, 0) + 1
+    print(f"  技能 Top12：{dict(sorted(counter.items(), key=lambda kv: -kv[1])[:12])}")
+    print(f"\n[下一步] python kg_builder.py")
 
 
 if __name__ == "__main__":

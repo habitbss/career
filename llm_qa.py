@@ -138,39 +138,72 @@ class JobKGQA:
                 return result
         return self.rule_parse(q)
 
-    def recommend(self, skills, cities=None, top_k=5):
+    def _required_weighted(self, job_node):
+        """返回 {技能名: 权重}。改造点：从边的 weight 属性取权重。"""
+        d = {}
+        for _, v, data in self.G.out_edges(job_node, data=True):
+            if data["rel"] == "requires":
+                d[v.split(":", 1)[1]] = float(data.get("weight", 1.0))
+        return d
+
+    def recommend_ranked(self, skills, cities=None):
+        """
+        改造点：把原来 recommend() 里的"算分+排序"单独拆出来，返回结构化列表。
+        这样评测脚本可以直接拿排名，不用去解析一段中文文本。
+        """
         user_set = set(skills)
         if not user_set:
-            return "请告诉我你会哪些技能，例如：我会 Python、SQL、MySQL。"
+            return []
+
         results = []
         for job_node in [n for n, d in self.G.nodes(data=True) if d["type"] == "job"]:
-            required = [v.split(":", 1)[1] for v in self._out(job_node, "requires")]
+            required = self._required_weighted(job_node)
             if not required:
                 continue
             if cities:
                 job_cities = [x.split(":", 1)[1] for x in self._out(job_node, "located_in")]
                 if not set(cities) & set(job_cities):
                     continue
-            hit = user_set & set(required)
-            miss = set(required) - user_set
-            score = 0.5 * (len(hit) / len(user_set)) + 0.5 * (len(hit) / len(required))
+
+            # 双向打分：
+            #   方向1 完成度 = 命中的要求权重 / 岗位的要求权重   （你满足岗位多少）
+            #   方向2 相关度 = 命中的要求权重 / 你的技能总数       （岗位用上你会多少）
+            # 只用一个方向的话，只要求 1~2 个技能的岗位会给所有人 100%。
+            total_w = sum(required.values()) or 1.0
+            got_w = sum(w for s, w in required.items() if s in user_set)
+            user_w = float(len(user_set)) or 1.0
+            score = 0.5 * (got_w / total_w) + 0.5 * (got_w / user_w)
+
+            hit = sorted(s for s in required if s in user_set)
+            miss = sorted(s for s in required if s not in user_set)
+
             results.append({
-                "job": job_node.split(":", 1)[1],
+                "job": job_node.split(":", 1)[1].split("@")[0],   # 显示时不带公司
                 "score": round(score, 3),
-                "hit": sorted(hit), "miss": sorted(miss),
+                "hit": hit, "miss": miss,
                 "salary": (self.G.nodes[job_node].get("salary_min"),
                            self.G.nodes[job_node].get("salary_max")),
                 "city": [x.split(":", 1)[1] for x in self._out(job_node, "located_in")],
                 "company": [x.split(":", 1)[1] for x in self._out(job_node, "offered_by")],
             })
-        results.sort(key=lambda x: (-x["score"], -len(x["hit"])))
+        results.sort(key=lambda x: (-x["score"], -len(x["hit"]), x["job"]))
+        return results
+
+    def recommend(self, skills, cities=None, top_k=5):
+        user_set = set(skills)
+        if not user_set:
+            return "请告诉我你会哪些技能，例如：我会 Python、SQL、MySQL。"
+
+        results = self.recommend_ranked(skills, cities)
 
         lines = [f"根据你会 [{', '.join(sorted(user_set))}]，推荐如下：\n"]
         for i, r in enumerate(results[:top_k], 1):
+            mn, mx = r["salary"]
+            sal = f"{mn}-{mx}K" if mn else "面议"
             lines.append(
                 f"{i}. {r['job']}（匹配度 {r['score'] * 100:.0f}%）\n"
                 f"   公司：{', '.join(r['company'])}  城市：{', '.join(r['city'])}\n"
-                f"   薪资：{r['salary'][0]}-{r['salary'][1]}K\n"
+                f"   薪资：{sal}\n"
                 f"   已匹配：{', '.join(r['hit']) or '无'}\n"
                 f"   还需补充：{', '.join(r['miss']) or '无'}\n"
             )
